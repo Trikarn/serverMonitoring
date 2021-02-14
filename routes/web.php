@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\ServersController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,7 +22,11 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/servers', function () {
-    return view('servers');
-});
+// Route::get('/servers', function () {
+//     return view('servers.servers');
+// });
+
+Route::get('/servers',  [ServersController::class, 'index']);
+Route::get('/servers/create',  [ServersController::class, 'create']);
+Route::post('/servers',  [ServersController::class, 'store']);
 
