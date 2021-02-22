@@ -6,16 +6,15 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
-class DatabaseSeeder extends Seeder
+class UserSeeder extends Seeder
 {
     /**
-     * Seed the application's database.
+     * Run the database seeds.
      *
      * @return void
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
         DB::table('users')->insert([
             [
                 'username' => 'admin',
@@ -36,24 +35,5 @@ class DatabaseSeeder extends Seeder
                 'type' => 'partner'
             ],
         ]);
-
-        DB::table('servers')->insert([
-            [
-              'name' => 'test1',
-              'host' => 'test1.com',
-              'http_port' => '80',
-              'https_port' => '444',
-              'owner' => '2'  
-            ],
-            [
-              'name' => 'test2',
-              'host' => 'test2.com',
-              'http_port' => '80',
-              'https_port' => '444',
-              'owner' => '3'  
-            ],
-        ]);
-
-
     }
 }

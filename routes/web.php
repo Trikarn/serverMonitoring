@@ -3,6 +3,7 @@
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ServersController;
+use App\Http\Controllers\TelegramController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,11 +23,25 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-// Route::get('/servers', function () {
-//     return view('servers.servers');
-// });
+Route::get('/support', function () {
+    return view('support.supports');
+});
 
 Route::get('/servers',  [ServersController::class, 'index']);
+Route::get('/favorite',  [ServersController::class, 'index']);
+Route::get('/servers/{id}/edit',  [ServersController::class, 'edit']);
 Route::get('/servers/create',  [ServersController::class, 'create']);
 Route::post('/servers',  [ServersController::class, 'store']);
+Route::delete('/servers/{id}/destroy',  [ServersController::class, 'destroy']);
+Route::put('/servers/{id}',  [ServersController::class, 'update']);
+Route::put('/servers/{id}/favorite',  [ServersController::class, 'favorite']);
+
+Route::get('/ajax/servers',  [ServersController::class, 'servers']);
+
+Route::get('/telegram',  [TelegramController::class, 'index']);
+Route::get('/telegram/create',  [TelegramController::class, 'create']);
+Route::post('/telegram',  [TelegramController::class, 'store']);
+
+Route::get('/ajax/telegram',  [TelegramController::class, 'telegrams']);
+
 

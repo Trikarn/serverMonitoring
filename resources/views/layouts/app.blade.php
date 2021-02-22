@@ -12,6 +12,7 @@
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="{{asset('js/jquery-3.5.1.min.js')}}"></script>
+    <script src="{{asset('js/bootstrap.bundle.js')}}"></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -38,19 +39,19 @@
                         @auth
                             <ul class="navbar-nav mr-auto">
                                 <li class="nav-item">
-                                    <a href="/servers" class="nav-link @if(Request::is('servers')) active @endif">Мои сервера</a>
+                                    <a href="/servers" class="nav-link @if(Request::is('servers*')) active @endif">Мои сервера</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/favorite" class="nav-link @if(Request::is('favorite')) active @endif">Избранное</a>
+                                    <a href="/favorite" class="nav-link @if(Request::is('favorite*')) active @endif">Избранное</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/support" class="nav-link @if(Request::is('support')) active @endif">Поддержка</a>
+                                    <a href="/support" class="nav-link @if(Request::is('support*')) active @endif">Поддержка</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/directory" class="nav-link @if(Request::is('directory')) active @endif">Справочник</a>
+                                    <a href="/telegram" class="nav-link @if(Request::is('telegram*')) active @endif">Телеграм-каналы</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/settings" class="nav-link @if(Request::is('settings')) active @endif">Настройки</a>
+                                    <a href="/settings" class="nav-link @if(Request::is('settings*')) active @endif">Настройки</a>
                                 </li>
                             </ul>   
                         @endauth

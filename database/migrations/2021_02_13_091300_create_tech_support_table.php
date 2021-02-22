@@ -17,6 +17,8 @@ class CreateTechSupportTable extends Migration
             $table->id();
             $table->integer('date');
             $table->string('type');
+            $table->string('status');
+            $table->string('text');
             $table->foreignId('author')->constrained('users');
             $table->timestamps();
         });
