@@ -17,7 +17,7 @@ class CreateTechSupportCommentsTable extends Migration
             $table->id();
             $table->foreignId('ticket_id')->constrained('tech_support');
             $table->foreignId('author')->constrained('users');
-            $table->string('message');
+            $table->text('message');
             $table->integer('date');
             $table->timestamps();
         });

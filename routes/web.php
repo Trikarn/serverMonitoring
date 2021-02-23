@@ -3,7 +3,11 @@
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ServersController;
+use App\Http\Controllers\SupportCommentController;
+use App\Http\Controllers\SupportController;
 use App\Http\Controllers\TelegramController;
+use App\Models\TechSupportComments;
+use App\Models\Telegram;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,27 +25,48 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('ho
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index']);
 
-Route::get('/support', function () {
-    return view('support.supports');
-});
-
+//SERVERS
 Route::get('/servers',  [ServersController::class, 'index']);
 Route::get('/favorite',  [ServersController::class, 'index']);
 Route::get('/servers/{id}/edit',  [ServersController::class, 'edit']);
 Route::get('/servers/create',  [ServersController::class, 'create']);
+Route::get('/ajax/servers',  [ServersController::class, 'servers']);
+
 Route::post('/servers',  [ServersController::class, 'store']);
+
 Route::delete('/servers/{id}/destroy',  [ServersController::class, 'destroy']);
+
 Route::put('/servers/{id}',  [ServersController::class, 'update']);
 Route::put('/servers/{id}/favorite',  [ServersController::class, 'favorite']);
 
-Route::get('/ajax/servers',  [ServersController::class, 'servers']);
-
+//TELEGRAM
 Route::get('/telegram',  [TelegramController::class, 'index']);
 Route::get('/telegram/create',  [TelegramController::class, 'create']);
+Route::get('/telegram/{id}/edit',  [TelegramController::class, 'edit']);
+Route::get('/ajax/telegram',  [TelegramController::class, 'telegrams']);
+
 Route::post('/telegram',  [TelegramController::class, 'store']);
 
-Route::get('/ajax/telegram',  [TelegramController::class, 'telegrams']);
+Route::put('/telegram/{id}', [TelegramController::class, 'update']);
+
+Route::delete('/telegram/{id}/destroy',  [TelegramController::class, 'destroy']);
+
+//SUPPORTS
+Route::get('/supports',  [SupportController::class, 'index']);
+Route::get('/supports/{id}/show',  [SupportController::class, 'show']);
+
+Route::get('/ajax/supports',  [SupportController::class, 'supports']);
+
+Route::post('/supports',  [SupportController::class, 'store']);
+
+//COMMENTS
+Route::post('/supports/{id}',  [SupportCommentController::class, 'store']);
+
+Route::get('/ajax/supports/{id}/comments',  [SupportCommentController::class, 'comments']);
+
+
+
 
 

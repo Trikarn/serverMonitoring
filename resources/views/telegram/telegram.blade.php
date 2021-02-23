@@ -64,17 +64,15 @@
         $(document).on('click', '.delete',function() {
             let id = $(this).attr('data-id');
             $.ajax({
-                url: '/servers/'+id+'/destroy',
+                url: '/telegram/'+id+'/destroy',
                 type: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function() {
-                   console.log(321);
                    show();
                 },
                 error: function() {
-                    console.log(123);
                 }
             });
         });

@@ -30,20 +30,18 @@
                                     <th scope="col"></th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="supports">
                                 <tr>
-                                    <th scope="row">1</th>
+                                    {{-- <th scope="row">1</th>
                                     <td>02.02.2021</td>
                                     <td>Вопросы</td>
                                     <td>Здравствуйте! Lorem ipsum dolor sit amet consectetur adipisicing elit. Non, animi!</td>
                                     <td>В работе</td>
-                                    <td><a href="#" class="btn btn-primary btn-sm">Просмотр</a></td>
+                                    <td><a href="#" class="btn btn-primary btn-sm">Просмотр</a></td> --}}
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                
-                    {{ __('You are logged in!') }}
                 </div>
             </div>
         </div>
@@ -60,19 +58,19 @@
               </button>
         </div>
         <div class="modal-body">
-            <form method="POST" action="{{ url('servers') }}" enctype="multipart/form-data">
+            <form method="POST" enctype="multipart/form-data">
                 {{ csrf_field() }}
                 <div class="row mb-3">
                     <label for="inputOwner" class="col-sm-2 col-form-label">Тип</label>
                     <div class="col-sm-6">
-                        <select class="form-select form-select-lg @error('owner') is-invalid @enderror" value="{{ old('owner') }}" aria-label="Default select example" name="owner">
-                            <option selected>Open this select menu</option>
-                            <option value="1">Общие вопросы</option>
-                            <option value="2">Пожелания</option>
-                            <option value="3">Ошибки</option>
-                            <option value="3">Другое</option>
+                        <select style="display: block" class="form-select form-select-lg @error('type') is-invalid @enderror" required value="{{ old('type') }}" aria-label="Default select example" name="type">
+                            <option disabled selected>Выберите тему</option>
+                            <option value="general_issues">Общие вопросы</option>
+                            <option value="wishes">Пожелания</option>
+                            <option value="errors">Ошибки</option>
+                            <option value="other">Другое</option>
                         </select>
-                        @error('owner')
+                        @error('type')
                           <span class="invalid-feedback" role="alert">
                               <strong>{{ $message }}</strong>
                           </span>
@@ -82,8 +80,8 @@
                 <div class="row mb-3">
                   <label for="inputName" class="col-sm-2 col-form-label">Сообщение</label>
                   <div class="col-sm-8">
-                    <input type="text" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" id="inputName" name="name">
-                    @error('name')
+                    <input type="text" class="form-control @error('text') is-invalid @enderror" required value="{{ old('text') }}" id="inputName" name="text">
+                    @error('text')
                       <span class="invalid-feedback" role="alert">
                           <strong>{{ $message }}</strong>
                       </span>
@@ -93,10 +91,77 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-            <button type="button" class="btn btn-primary">Добавить</button>
+            <button type="button" class="btn btn-primary add">Добавить</button>
         </form>
         </div>
     </div>
     </div>
 </div>
+<script>
+    function show() {
+        $('.supports').html('');
+        $.ajax({
+            url: '/ajax/supports',
+            success: function(elements) {
+                console.log(elements);
+                elements.forEach(function(element) {
+                    string = '<tr> <th scope="row">'+element.id+'</th> <th scope="row">'+element.date+'</th> <td>'+element.type+'</td><td>'+element.text+'</td><td>'+element.status+'</td>';
+                    string += '<td><a href="/supports/'+element.id+'/show" class="btn btn-primary btn-sm">Просмотр</a></td>';
+                    $('.supports').append(string);
+                });
+            },
+            error: function() {
+
+            }
+        });
+    }
+    $(document).ready(function() {
+        show();
+        
+        $(document).on('click', '.add',function() {
+            $.ajax({
+                url: '/supports',
+                method: 'post',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    'type' : $("select[name='type']").val(),
+                    'text' : $("input[name='text']").val(),
+                },
+                success: function() {
+                   console.log($("input[name='type']").val());
+                   console.log(123);
+                },
+                error: function(err) {
+                    if (err.status == 422) { // when status code is 422, it's a validation issue
+                        $('.error').remove();                       
+                        // you can loop through the errors object and show it to the user
+                        // display errors on each form field
+                        $.each(err.responseJSON.errors, function (i, error) {
+                            var el = $(document).find('[name="'+i+'"]');
+                            el.after($('<span class="error" style="color: red;">'+error[0]+'</span>'));
+                        });
+                    }
+                }
+            });
+        });
+
+        // $(document).on('click', '.delete',function() {
+        //     let id = $(this).attr('data-id');
+        //     $.ajax({
+        //         url: '/telegram/'+id+'/destroy',
+        //         type: 'DELETE',
+        //         headers: {
+        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //         },
+        //         success: function() {
+        //            show();
+        //         },
+        //         error: function() {
+        //         }
+        //     });
+        // });
+    });
+</script>
 @endsection

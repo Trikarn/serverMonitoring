@@ -52,19 +52,36 @@ class TelegramController extends Controller
 
     }
 
-    public function edit()
+    public function edit($id)
     {
-
+        $telegramData = Telegram::findOrFail($id);
+        return view('telegram.manage',$telegramData);
     }
 
-    public function update()
+    public function update($id, User $user)
     {
+        $data = request()->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'chat' => ['required', 'integer'],
+            'token' => ['required', 'string', 'max:255'],
+            'owner' => ['required', 'integer'],
+        ]);
 
+        if(!$user->isAdmin()) $data['owner'] = Auth()->id();
+        Telegram::where('id',$id)->update($data);
+
+        return redirect('/telegram');
     }
 
-    public function destroy()
+    public function destroy($id, Telegram $telegram)
     {
+        $userType = Auth()->user()->type;
+        
+        $result = $telegram->deleteTelegram($id,$userType);
 
+        return [
+            'success' => 'true'
+        ];
     }
 
 }
