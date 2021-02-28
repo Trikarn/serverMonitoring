@@ -7,7 +7,9 @@
             <div class="card">
                 <div class="card-header">
                     {{ __('Сервера') }}
+                    @if (Auth::user()->type != 'admin')
                     <a href="/servers/create" class="btn btn-primary float-right">Добавить</a>
+                    @endif
                 </div>
 
                 <div class="card-body">
@@ -16,17 +18,21 @@
                             {{ session('status') }}
                         </div>
                     @endif
-                    {{-- <div class='item-list-1 row fw-bold'> --}}
-                    {{-- <div class='row'>
-                        <div class='col-3'>Название</div>
-                        <div class='col-6' >Хост</div>
-                        <div class='col-3' >Включен</div>
+                    <div class="row" style="margin: 10px 5px">
+                        <select onchange="show()" class="form-select" name="status" aria-label="Default select example">
+                            <option value="" checked>Статус</option>
+                            <option value="1">Включен</option>
+                            <option value="0">Выключен</option>
+                        </select>
+                    @if (Auth::user()->type == 'admin')
+                        <select onchange="show()" style="margin-left: 20px" name="users" class="form-select" name="status" aria-label="Default select example">
+                            <option value="" checked>Пользователи</option>
+                            <option value="2">tst1</option>
+                            <option value="3">tattawtat2</option>
+                        </select>
+                    @endif
                     </div>
-                    <div class='row'>
-                        <div class='col-3'>Test</div>
-                        <div class='col-6' >123123123123123</div>
-                        <div class='col-3' >Yes</div>
-                    </div> --}}
+
                     <div class="table-responsive-lg">
                         <table class="table">
                             <thead>
@@ -42,34 +48,6 @@
                                 </tr>
                             </thead>
                             <tbody class="servers">
-                                    {{-- <tr>
-                                        <th scope="row">element->id</th>
-                                        <th scope="row">element->name</th>
-                                        <td>element->host</td>
-                                        <td><input style="margin-left: 20px" class="form-check-input" type="checkbox"></td>
-                                        <td><a href="#" class="btn btn-primary btn-sm">Информация</a></td>
-                                        <td>
-                                            <a class="button-manage" role="button">
-                                                <svg class="bi" width="32" height="32" fill="currentColor">
-                                                    <use xlink:href="bootstrap-icons.svg#gear-fill"/>
-                                                </svg>
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <a class="button-manage" role="button">
-                                                <svg class="bi" width="32" height="32" fill="currentColor">
-                                                    <use xlink:href="bootstrap-icons.svg#heart-fill"/>
-                                                </svg>
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <a class="button-remove" role="button">
-                                                <svg class="bi" width="32" height="32" fill="currentColor">
-                                                    <use xlink:href="bootstrap-icons.svg#trash-fill"/>
-                                                </svg>
-                                            </a>
-                                        </td>
-                                    </tr> --}}
                             </tbody>
                         </table>
                     </div>
@@ -77,9 +55,6 @@
             </div>
         </div>
     </div>
-    @if(Request::url() == 'http://server-monitoring/favorite')
-    12313123313
-    @endif
 </div>
 
 <script>
@@ -89,10 +64,20 @@
             url: '/ajax/servers',
             @if(Request::url() == 'http://server-monitoring/favorite')
             data: {
-                'favorite' : '1'
+                'favorite' : '1',
+                'status' : $('select[name="status"]').val(),
+                'users' : $('select[name="users"]').val(),
+            },
+            @else
+            data: {
+                'status' : $('select[name="status"]').val(),
+                'users' : $('select[name="users"]').val(),
             },
             @endif
             success: function(elements) {
+                if(elements.length == 0) {
+                    $('.servers').append('<tr><td colspan="4">Ничего не найдено</td></tr>');
+                }
                 elements.forEach(function(element) {
                     string = '<tr> <th scope="row">'+element.id+'</th> <th scope="row">'+element.name+'</th> <td>'+element.host+'</td>';
                     if(element.enabled == 1) {
@@ -135,7 +120,6 @@
                     }
                 },
                 error: function() {
-                    console.log(123);
                 }
             });
         });
@@ -149,11 +133,9 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function() {
-                   console.log(321);
                    show();
                 },
                 error: function() {
-                    console.log(123);
                 }
             });
         });

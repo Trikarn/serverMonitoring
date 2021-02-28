@@ -10,54 +10,48 @@
                 </div>
 
                 <div class="card-body">
+                    <div class="alert alert-success myAlert" style="display: none" role="alert">
+                    </div>
                     @if (session('status'))
                         <div class="alert alert-success" role="alert">
                             {{ session('status') }}
                         </div>
                     @endif
                     <div class="row" style="margin: 10px 5px">
-                        <select class="form-select" aria-label="Default select example">
-                            <option selected>Выберите статус</option>
+                        <select class="form-select" name="status" aria-label="Default select example">
+                            <option value="" disabled selected>Выберите статус</option>
                             @if ($status == 'new')
-                                <option value="1" selected>Новый</option>
+                                <option value="new" selected>Новый</option>
                             @else
-                                <option value="1">Новый</option>
+                                <option value="new">Новый</option>
                             @endif
                             @if ($status == 'work')
-                                <option value="2" selected>В работе</option>
+                                <option value="work" selected>В работе</option>
                             @else
-                            <option value="2">В работе</option>
+                            <option value="work">В работе</option>
                             @endif
                             @if ($status == 'closed')
-                                <option value="3" selected>Закрыто</option>                            
+                                <option value="closed" selected>Закрыто</option>                            
                             @else
-                            <option value="3">Закрыто</option>
+                            <option value="closed">Закрыто</option>
                             @endif
                         </select>
                     </div>
+                    <div class="group-rom"> 
+                        <div class="row">
+                            <div class="first-part odd col-4">
+                                {{ $author }}
+                                <div style="font-size: 10px">
+                                    {{ gmdate("d-m-Y H:i", $date) }}
+                                </div> 
+                            </div> 
+                            <div class="second-part col-8">
+                                {{ $text }}
+                            </div> 
+                        </div> 
+                    </div>
+
                     <div class="comments">
-                        <div class="group-rom">
-                            <div class="row">
-                                <div class="first-part odd col-4">
-                                    Jonathan 123213Smith 
-                                    <div style="font-size: 10px">
-                                        21.02.2021 12:30
-                                    </div> 
-                                </div>
-                                <div class="second-part col-8">Hello Cendy are you there?</div>
-                            </div>
-                        </div>
-                        <div class="group-rom">
-                            <div class="row">
-                                <div class="first-part odd col-4">
-                                    Jonathan Smith 
-                                    <div style="font-size: 10px">
-                                        21.02.2021 12:30
-                                    </div> 
-                                </div>
-                                <div class="second-part col-8">Hello Cendy are you there?</div>
-                            </div>
-                        </div>
                     </div>
 
                     <form action="{{ "/supports/$id" }}" method="POST">
@@ -82,7 +76,6 @@
         $.ajax({
             url: '{{ "/ajax/supports/$id/comments" }}',
             success: function(elements) {
-                console.log(elements);
                 elements.forEach(function(element) {
                     string = '<div class="group-rom"> <div class="row">' 
                     +'<div class="first-part odd col-4">'+element.username
@@ -111,8 +104,6 @@
                     'text' : $("input[name='text']").val(),
                 },
                 success: function() {
-                   console.log($("input[name='type']").val());
-                   console.log(123);
                 },
                 error: function(err) {
                     if (err.status == 422) { // when status code is 422, it's a validation issue
@@ -126,6 +117,26 @@
                     }
                 }
             });
+        });
+    });
+
+    $('select[name="status"]').change(function() {
+        $.ajax({
+            url: '{{ "/ajax/supports/$id/change-status" }}',
+            method: 'post',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: {
+                'status' : $("select[name='status']").val(),
+            },
+            success: function() {
+                $('.myAlert').html('');
+                $('.myAlert').html('Статус изменен').show(0).delay(3000).hide(0);
+            },
+            error: function() {
+                
+            }
         });
     });
 </script>

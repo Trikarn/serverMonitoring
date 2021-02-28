@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\Auth;
 
 class SupportCommentController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     public function comments($id, TechSupportComments $supportComment)
     {
         $user = new User();
@@ -38,6 +43,6 @@ class SupportCommentController extends Controller
 
         TechSupportComments::create($data);
 
-        return redirect("/supports/$id/show");
+        return redirect("/supports/$id/show")->with('status','Добавлен новый комментарий');
     }
 }

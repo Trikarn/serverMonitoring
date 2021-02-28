@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Auth;
 
 class SupportController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     public function index()
     {
         return view('support.supports');
@@ -31,7 +36,7 @@ class SupportController extends Controller
 
         TechSupport::create($data);
 
-        return redirect('/supports');
+        return redirect('/supports')->with('status','Успешно');
     }
 
     public function supports(Request $request)
@@ -40,9 +45,13 @@ class SupportController extends Controller
         $techSupport = new TechSupport();
 
         $data = [];
+        $status = $request->input('status');
+        
         if(!$user->isAdmin()) {
            $data['userId'] = Auth::id();
         }
+        if(!empty($status)) $data['status'] = $status;
+
         $techSupports = $techSupport->supports($data);
 
         $techSupports = $this->parserToUserFriendly($techSupports);
@@ -52,41 +61,19 @@ class SupportController extends Controller
 
     public function show($id, TechSupport $techSupport)
     {
+        $user = new User();
+
+        if(!$user->isAdmin()) {
+            $isLink = $techSupport->isLink($id);
+            if(!$isLink) return view('404');
+        }
         $supportData = TechSupport::findOrFail($id);
+        $userData = User::find($supportData->author);
+        $supportData->author = $userData->username;
+        
         return view('support.show',$supportData);
     }
 
-    // public function edit($id)
-    // {
-    //     $telegramData = Telegram::findOrFail($id);
-    //     return view('telegram.manage',$telegramData);
-    // }
-
-    // public function update($id, User $user)
-    // {
-    //     $data = request()->validate([
-    //         'name' => ['required', 'string', 'max:255'],
-    //         'chat' => ['required', 'integer'],
-    //         'token' => ['required', 'string', 'max:255'],
-    //         'owner' => ['required', 'integer'],
-    //     ]);
-
-    //     if(!$user->isAdmin()) $data['owner'] = Auth()->id();
-    //     Telegram::where('id',$id)->update($data);
-
-    //     return redirect('/telegram');
-    // }
-
-    // public function destroy($id, TechSupport $techSupport)
-    // {
-    //     $userType = Auth()->user()->type;
-        
-    //     $result = $techSupport->deleteSu($id,$userType);
-
-    //     return [
-    //         'success' => 'true'
-    //     ];
-    // }
 
     /**
      * @var supports date, type, status
@@ -112,6 +99,24 @@ class SupportController extends Controller
         }
 
         return $supports;
+    }
+
+    public function changeStatus($id, Request $request)
+    {
+        $user = new User();
+        $techSupport = new TechSupport();
+
+        $status = $request->input('status');
+        if(empty($status)) return;
+
+        if(!$user->isAdmin()) {
+            $isLink = $techSupport->isLink($id);
+            if(!$isLink) return view('404');
+        }
+
+        $techSupport->changeStatus($id, $status);
+
+        return back()->with('status','Успешно');
     }
 
 

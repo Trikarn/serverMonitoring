@@ -31,6 +31,12 @@ class Server extends Model
         if(array_key_exists('favorite',$data)) {
             $servers = $servers->where('favorite','1');
         }
+        if(array_key_exists('status',$data)) {
+            $servers = $servers->where('enabled',$data['status']);
+        }
+        if(array_key_exists('users',$data)) {
+            $servers = $servers->where('owner',$data['users']);
+        }
 
         return $servers->get();
     }
@@ -40,6 +46,18 @@ class Server extends Model
         $result = DB::table($this->table)->where('id',$id);
         if($userType != 'admin') $result = $result->where('owner',Auth()->id());
         return $result->delete();
+    }
+
+    public function isLink($serverId)
+    {
+        $result = DB::table($this->table)
+            ->where('owner', Auth::id())
+            ->where('id',$serverId)
+            ->limit(1)
+            ->get();
+
+        if(count($result) == 1) return true;
+        return false;
     }
 
 }

@@ -18,6 +18,14 @@
                             {{ session('status') }}
                         </div>
                     @endif
+                    <div class="row" style="margin: 10px 5px">
+                        <select onchange="show()" class="form-select" name="status" aria-label="Default select example">
+                            <option value="" checked>Статус</option>
+                            <option value="new">Новый</option>
+                            <option value="work">В работе</option>
+                            <option value="closed">Закрыто</option>
+                        </select>
+                    </div>
                     <div class="table-responsive-lg">
                         <table class="table">
                             <thead>
@@ -102,10 +110,15 @@
         $('.supports').html('');
         $.ajax({
             url: '/ajax/supports',
+            data: {
+                'status' : $('select[name="status"]').val(),
+            },
             success: function(elements) {
-                console.log(elements);
+                if(elements.length == 0) {
+                    $('.supports').append('<tr><td>Ничего не найдено</td></tr>');
+                }
                 elements.forEach(function(element) {
-                    string = '<tr> <th scope="row">'+element.id+'</th> <th scope="row">'+element.date+'</th> <td>'+element.type+'</td><td>'+element.text+'</td><td>'+element.status+'</td>';
+                    string = '<tr> <th scope="row">'+element.id+'</th> <th scope="row">'+element.date+'</th> <td>'+element.type+'</td><td>'+element.text.slice(0, 20)+'</td><td>'+element.status+'</td>';
                     string += '<td><a href="/supports/'+element.id+'/show" class="btn btn-primary btn-sm">Просмотр</a></td>';
                     $('.supports').append(string);
                 });
@@ -130,8 +143,8 @@
                     'text' : $("input[name='text']").val(),
                 },
                 success: function() {
-                   console.log($("input[name='type']").val());
-                   console.log(123);
+                    show();
+                    $('#exampleModal').modal('hide');
                 },
                 error: function(err) {
                     if (err.status == 422) { // when status code is 422, it's a validation issue
@@ -147,21 +160,6 @@
             });
         });
 
-        // $(document).on('click', '.delete',function() {
-        //     let id = $(this).attr('data-id');
-        //     $.ajax({
-        //         url: '/telegram/'+id+'/destroy',
-        //         type: 'DELETE',
-        //         headers: {
-        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //         },
-        //         success: function() {
-        //            show();
-        //         },
-        //         error: function() {
-        //         }
-        //     });
-        // });
     });
 </script>
 @endsection

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class Telegram extends Model
@@ -35,5 +36,17 @@ class Telegram extends Model
         $result = DB::table($this->table)->where('id',$id);
         if($userType != 'admin') $result = $result->where('owner',Auth()->id());
         return $result->delete();
+    }
+
+    public function isLink($telegramId)
+    {
+        $result = DB::table($this->table)
+            ->where('owner', Auth::id())
+            ->where('id',$telegramId)
+            ->limit(1)
+            ->get();
+
+        if(count($result) == 1) return true;
+        return false;
     }
 }

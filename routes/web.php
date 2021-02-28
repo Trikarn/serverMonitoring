@@ -3,6 +3,7 @@
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ServersController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SupportCommentController;
 use App\Http\Controllers\SupportController;
 use App\Http\Controllers\TelegramController;
@@ -21,11 +22,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index']);
 
 //SERVERS
 Route::get('/servers',  [ServersController::class, 'index']);
@@ -60,11 +58,17 @@ Route::get('/supports/{id}/show',  [SupportController::class, 'show']);
 Route::get('/ajax/supports',  [SupportController::class, 'supports']);
 
 Route::post('/supports',  [SupportController::class, 'store']);
+Route::post('/ajax/supports/{id}/change-status', [SupportController::class, 'changeStatus']);
+
 
 //COMMENTS
 Route::post('/supports/{id}',  [SupportCommentController::class, 'store']);
 
 Route::get('/ajax/supports/{id}/comments',  [SupportCommentController::class, 'comments']);
+
+//SETTINGS
+
+Route::get('/settings',  [SettingsController::class, 'index']);
 
 
 

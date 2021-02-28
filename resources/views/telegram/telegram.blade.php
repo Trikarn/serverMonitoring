@@ -45,7 +45,9 @@
         $.ajax({
             url: '/ajax/telegram',
             success: function(elements) {
-                console.log(elements);
+                if(elements.length == 0) {
+                    $('.telegrams').append('<tr><td colspan="4">Ничего не найдено</td></tr>');
+                }
                 elements.forEach(function(element) {
                     string = '<tr> <th scope="row">'+element.id+'</th> <th scope="row">'+element.name+'</th> <td>'+element.chat+'</td><td>'+element.token+'</td>';
                     string += '<td> <a href="/telegram/'+element.id+'/edit" class="button-manage" role="button"> <svg class="bi" width="32" height="32" fill="currentColor"> <use xlink:href="bootstrap-icons.svg#gear-fill"/> </svg></a> </td>';

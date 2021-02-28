@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Auth;
 
 class TelegramController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
         return view('telegram.telegram');
@@ -54,12 +59,26 @@ class TelegramController extends Controller
 
     public function edit($id)
     {
+        $user = new User();
+        $telegram = new Telegram();
+
+        if(!$user->isAdmin()) {
+            $isLink = $telegram->isLink($id);
+            if(!$isLink) return view('404');
+        }
         $telegramData = Telegram::findOrFail($id);
         return view('telegram.manage',$telegramData);
     }
 
     public function update($id, User $user)
     {
+        $user = new User();
+        $telegram = new Telegram();
+
+        if(!$user->isAdmin()) {
+            $isLink = $telegram->isLink($id);
+            if(!$isLink) return view('404');
+        }
         $data = request()->validate([
             'name' => ['required', 'string', 'max:255'],
             'chat' => ['required', 'integer'],
@@ -75,6 +94,13 @@ class TelegramController extends Controller
 
     public function destroy($id, Telegram $telegram)
     {
+        $user = new User();
+        $telegram = new Telegram();
+
+        if(!$user->isAdmin()) {
+            $isLink = $telegram->isLink($id);
+            if(!$isLink) return view('404');
+        }
         $userType = Auth()->user()->type;
         
         $result = $telegram->deleteTelegram($id,$userType);
