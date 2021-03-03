@@ -85,7 +85,7 @@
                     } else {
                         string += '<td><input style="margin-left: 20px" class="form-check-input" type="checkbox" onclick="return false;"></td>';
                     }
-                    string += '<td><a href="#" class="btn btn-primary btn-sm">Информация</a></td> <td> <a href="/servers/'+element.id+'/edit" class="button-manage" role="button"> <svg class="bi" width="32" height="32" fill="currentColor"> <use xlink:href="bootstrap-icons.svg#gear-fill"/> </svg></a> </td>';
+                    string += '<td><a href="/servers/'+element.id+'/info" class="btn btn-primary btn-sm">Информация</a></td> <td> <a href="/servers/'+element.id+'/edit" class="button-manage" role="button"> <svg class="bi" width="32" height="32" fill="currentColor"> <use xlink:href="bootstrap-icons.svg#gear-fill"/> </svg></a> </td>';
                     if(element.favorite == 1) {
                         string += '<td> <a class="button-manage" id="favorite" role="button" data-favorite='+element.id+'> <svg class="bi heart" data-id='+element.id+' width="32" height="32" fill="currentColor"> <use xlink:href="bootstrap-icons.svg#heart-fill"/> </svg> </a></td>';
                     } else {

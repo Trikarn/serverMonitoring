@@ -13,21 +13,28 @@
                     <div class="alert alert-success myAlert" style="display: none" role="alert">
                     </div>
                     @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
+                        @if(session('success') == 'false')
+                            <div class="alert alert-danger" role="alert">
+                                {{ session('status') }}
+                            </div>
+                        @else
+                            <div class="alert alert-success" role="alert">
+                                {{ session('status') }}
+                            </div>
+                        @endif
                     @endif
 
                     <div class="comments">
                     </div>
 
-                    <form method="POST" action="{{ url('servers') }}" enctype="multipart/form-data">
+                    <form method="POST" action="/settings/password" enctype="multipart/form-data">
+                        {{ method_field('PUT') }}
                         {{ csrf_field() }}
                         <h4>Смена пароля</h4>
                         <div class="row mb-3">
                           <label for="inputName1" class="col-sm-2 col-form-label">Текущий пароль</label>
                           <div class="col-sm-8">
-                            <input type="text" class="form-control @error('oldPass') is-invalid @enderror" value="{{ old('oldPass') }}" id="inputName1" name="oldPassword">
+                            <input type="password" class="form-control @error('oldPass') is-invalid @enderror" value="{{ old('oldPass') }}" id="inputName1" name="oldPassword">
                             @error('oldPass')
                               <span class="invalid-feedback" role="alert">
                                   <strong>{{ $message }}</strong>
@@ -38,7 +45,7 @@
                         <div class="row mb-3">
                           <label for="inputName" class="col-sm-2 col-form-label">Новый пароль</label>
                           <div class="col-sm-8">
-                            <input type="text" class="form-control @error('newPass') is-invalid @enderror" value="{{ old('newPass') }}" id="inputName" name="newPassword">
+                            <input type="password" class="form-control @error('newPass') is-invalid @enderror" value="{{ old('newPass') }}" id="inputName" name="newPassword">
                             @error('newPass')
                               <span class="invalid-feedback" role="alert">
                                   <strong>{{ $message }}</strong>

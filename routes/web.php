@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\ServerInfoController;
 use App\Http\Controllers\ServersController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SupportCommentController;
@@ -22,6 +23,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/', [HomeController::class, 'index']);
 
 Auth::routes();
 
@@ -69,6 +71,14 @@ Route::get('/ajax/supports/{id}/comments',  [SupportCommentController::class, 'c
 //SETTINGS
 
 Route::get('/settings',  [SettingsController::class, 'index']);
+
+Route::PUT('/settings/password',  [SettingsController::class, 'changePassword']);
+
+//SERVER INFORMATION
+
+Route::get('/servers/{id}/info',  [ServerInfoController::class, 'showInfo']);
+
+Route::get('/servers/{id}/full-information',  [ServerInfoController::class, 'index']);
 
 
 
