@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable
 {
@@ -41,9 +42,24 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    // public $userId = Auth::id();
+
+    // public $userData = Auth::user();
+
     public static function findByEmail($email) 
     {
         return User::where('email',$email)->first();
+    }
+
+    public function isAdmin()
+    {
+        $isAdmin = User::where('type','admin')
+            ->where('id',Auth::id())
+            ->limit(1)
+            ->get();
+        
+        if(count($isAdmin) == 1) return true;
+        return false;
     }
 
 }

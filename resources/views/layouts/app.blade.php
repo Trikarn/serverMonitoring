@@ -12,6 +12,7 @@
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="{{asset('js/jquery-3.5.1.min.js')}}"></script>
+    <script src="{{asset('js/bootstrap.bundle.js')}}"></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -20,6 +21,40 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+    <style>
+        .group-rom {
+            width: 100%;
+            float: left;
+            border-bottom: 1px solid #eaebee;
+        }
+
+        .group-rom .first-part,
+        .group-rom .second-part,
+        .group-rom .third-part {
+            float: left;
+            padding: 15px;
+        }
+
+        .group-rom .first-part {
+            width: 25%;
+        }
+
+        .group-rom .first-part.odd {
+            background: #f7f8fa;
+            color: #6a6a6a;
+            font-weight: 600;
+        }
+
+        .group-rom .second-part{
+            width: 60%;
+        }
+
+        .group-rom .third-part{
+            width: 15%;
+            color: #d4d3d3;
+        }
+    </style>
 </head>
 <body>
     <div id="app">
@@ -38,19 +73,19 @@
                         @auth
                             <ul class="navbar-nav mr-auto">
                                 <li class="nav-item">
-                                    <a href="/servers" class="nav-link @if(Request::is('servers')) active @endif">Мои сервера</a>
+                                    <a href="/servers" class="nav-link @if(Request::is('servers*')) active @endif">Мои сервера</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/favorite" class="nav-link @if(Request::is('favorite')) active @endif">Избранное</a>
+                                    <a href="/favorite" class="nav-link @if(Request::is('favorite*')) active @endif">Избранное</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/support" class="nav-link @if(Request::is('support')) active @endif">Поддержка</a>
+                                    <a href="/supports" class="nav-link @if(Request::is('support*')) active @endif">Поддержка</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/directory" class="nav-link @if(Request::is('directory')) active @endif">Справочник</a>
+                                    <a href="/telegram" class="nav-link @if(Request::is('telegram*')) active @endif">Телеграм-каналы</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="/settings" class="nav-link @if(Request::is('settings')) active @endif">Настройки</a>
+                                    <a href="/settings" class="nav-link @if(Request::is('settings*')) active @endif">Настройки</a>
                                 </li>
                             </ul>   
                         @endauth

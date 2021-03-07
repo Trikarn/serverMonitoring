@@ -19,7 +19,10 @@ class CreateServerInfoTable extends Migration
             $table->boolean('enabled');
             $table->integer('time');
             $table->integer('temp_proces');
+            $table->integer('load_proces');
             $table->integer('temp_hard');
+            $table->integer('disc_mem');
+            $table->integer('ram');
             $table->integer('speed_cooler');
             $table->timestamps();
         });

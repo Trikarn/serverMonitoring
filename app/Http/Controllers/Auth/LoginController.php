@@ -46,12 +46,12 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->only('username', 'password', 'remember');
+        $credentials = $request->only('username', 'password');
 
         if(Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect()->intended('home');
+            return redirect()->intended('/');
         }
 
         return back()->withErrors([

@@ -19,7 +19,8 @@ class CreateServersTable extends Migration
             $table->string('host');
             $table->integer('http_port');
             $table->integer('https_port');
-            $table->boolean('enabled')->default('false');
+            $table->boolean('enabled')->default(0);
+            $table->boolean('favorite')->default(0);
             $table->foreignId('owner')->constrained('users');
             $table->timestamps();
         });
