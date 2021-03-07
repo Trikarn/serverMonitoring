@@ -21,14 +21,25 @@
                             <option value="1">Включен</option>
                             <option value="0">Выключен</option>
                         </select>
-                    @if (Auth::user()->type == 'admin')
-                        <select onchange="show()" style="margin-left: 20px" name="users" class="form-select" name="status" aria-label="Default select example">
-                            <option value="" checked>Пользователи</option>
-                            <option value="2">tst1</option>
-                            <option value="3">tattawtat2</option>
+                        <select style="margin-left: 10px" onchange="show()" class="form-select" name="order" aria-label="Default select example">
+                            <option value="" checked>Сортировка</option>
+                            <option value="temp_proces">Температура процессора</option>
+                            <option value="load_proces">Нагрузка процессора</option>
+                            <option value="temp_hard">Температура жесткого диска</option>
+                            <option value="disc_mem">Место на HDD</option>
+                            <option value="ram">RAM</option>
+                            <option value="speed_cooler">Скорость кулера</option>
+                            <option value="time">Время</option>
                         </select>
-                    @endif
+
+                        <div class="date" style="margin-left: 30px; padding-left: 10px;">
+                            <label for="dateFrom">От</label>
+                            <input onchange="show()" type="datetime-local" name="dateFrom" id="dateFrom">
+                            <label for="dateTo">До</label>
+                            <input onchange="show()" type="datetime-local" name="dateTo" id="dateTo">
+                        </div>
                     </div>
+
 
                     <div class="table-responsive-lg">
                         <table class="table">
@@ -37,17 +48,21 @@
                                     <th scope="col">#</th>
                                     <th scope="col">Время</th>
                                     <th scope="col">Включен</th>
-                                    <th scope="col">t(°С) процессора</th>
-                                    <th scope="col">Нагрузка процессора</th>
-                                    <th scope="col">t(°С) HDD</th>
-                                    <th scope="col">Место на HDD</th>
-                                    <th scope="col">RAM</th>
-                                    <th scope="col">Скорость кулера</th>
+                                    <th scope="col">Температура процессора, °С</th>
+                                    <th scope="col">Нагрузка процессора, %</th>
+                                    <th scope="col">Температура HDD, °С</th>
+                                    <th scope="col">Место на HDD, МБ</th>
+                                    <th scope="col">RAM, МБ</th>
+                                    <th scope="col">Скорость кулера, о/с</th>
                                 </tr>
                             </thead>
                             <tbody class="info">
                             </tbody>
                         </table>
+                        <nav aria-label="Page navigation example" class="paginationNav" style="display: none">
+                            <ul class="pagination">
+                            </ul>
+                        </nav>
                     </div>
                 </div>
             </div>
@@ -56,87 +71,93 @@
 </div>
 
 <script>
-    // function show() {
-    //     $('.servers').html('');
-    //     $.ajax({
-    //         url: '/ajax/servers',
-    //         @if(Request::url() == 'http://server-monitoring/favorite')
-    //         data: {
-    //             'favorite' : '1',
-    //             'status' : $('select[name="status"]').val(),
-    //             'users' : $('select[name="users"]').val(),
-    //         },
-    //         @else
-    //         data: {
-    //             'status' : $('select[name="status"]').val(),
-    //             'users' : $('select[name="users"]').val(),
-    //         },
-    //         @endif
-    //         success: function(elements) {
-    //             if(elements.length == 0) {
-    //                 $('.servers').append('<tr><td colspan="4">Ничего не найдено</td></tr>');
-    //             }
-    //             elements.forEach(function(element) {
-    //                 string = '<tr> <th scope="row">'+element.id+'</th> <th scope="row">'+element.name+'</th> <td>'+element.host+'</td>';
-    //                 if(element.enabled == 1) {
-    //                     string += '<td><input style="margin-left: 20px" class="form-check-input" type="checkbox" onclick="return false;" checked></td>';
-    //                 } else {
-    //                     string += '<td><input style="margin-left: 20px" class="form-check-input" type="checkbox" onclick="return false;"></td>';
-    //                 }
-    //                 string += '<td><a href="/servers/'+element.id+'/info" class="btn btn-primary btn-sm">Информация</a></td> <td> <a href="/servers/'+element.id+'/edit" class="button-manage" role="button"> <svg class="bi" width="32" height="32" fill="currentColor"> <use xlink:href="bootstrap-icons.svg#gear-fill"/> </svg></a> </td>';
-    //                 if(element.favorite == 1) {
-    //                     string += '<td> <a class="button-manage" id="favorite" role="button" data-favorite='+element.id+'> <svg class="bi heart" data-id='+element.id+' width="32" height="32" fill="currentColor"> <use xlink:href="bootstrap-icons.svg#heart-fill"/> </svg> </a></td>';
-    //                 } else {
-    //                     string += '<td> <a class="button-manage" id="favorite" role="button" data-favorite='+element.id+'> <svg class="bi heart" data-id='+element.id+' width="32" height="32" fill="currentColor"> <use xlink:href="bootstrap-icons.svg#heart"/> </svg> </a></td>';
-    //                 }
-    //                 string += '<td><a class="button-remove delete" role="button" data-id='+element.id+'> <svg class="bi" width="32" height="32" fill="currentColor"> <use xlink:href="bootstrap-icons.svg#trash-fill"/> </svg> </a> </td> </tr>';
+    function show(limit = 15, offset = 0) {
+        let dateFrom = convertDateToUnix($('input[name="dateFrom"]').val());
+        let dateTo = convertDateToUnix($('input[name="dateTo"]').val());
 
-    //                 $('.servers').append(string);
-    //             });
-    //         },
-    //         error: function() {
+        $.ajax({
+            url: '/ajax/servers/{{ $id }}/full-information',
+            data: {
+                'status' : $('select[name="status"]').val(),
+                'sort' : $('select[name="order"]').val(),
+                'dateFrom' : dateFrom,
+                'dateTo' : dateTo,
+                'limit' : limit,
+                'offset' : offset,
+                'count' : true,
+            },
+            success: function(result) {
+                $('.info').html('');
+                $('.pagination').html('');
+                // console.log(result);
+                let elements = result.information
+                if(elements.length == 0) {
+                    $('.info').append('<tr><td colspan="4">Ничего не найдено</td></tr>');
+                }
+                elements.forEach(function(element) {
+                    string = '<tr data-href="{{ Request::path() }}/'+element.id+'" style="cursor:pointer"> <th scope="row">'+element.id+'</th> <th scope="row">'+timeConverter(element.time)+'</th>';
+                    if(element.enabled == 1) {
+                        string += '<td><input style="margin-left: 20px" class="form-check-input" type="checkbox" onclick="return false;" checked></td>';
+                    } else {
+                        string += '<td><input style="margin-left: 20px" class="form-check-input" type="checkbox" onclick="return false;"></td>';
+                    }
+                    string += '<td>'+element.temp_proces+'</td><td>'+element.load_proces+'</td>';
+                    string += '<td>'+element.temp_hard+'</td><td>'+(element.disc_mem / 1024).toFixed(2)+'</td>';
+                    string += '<td>'+(element.ram / 1024).toFixed(2)+'</td><td>'+element.speed_cooler+'</td></tr>';
 
-    //         }
-    //     });
-    // }
-    // $(document).ready(function() {
-    //     show();
-    //     $(document).on('click', '#favorite',function() {
-    //         let id = $(this).attr('data-favorite');
-    //         let favorite = this;
-    //         $.ajax({
-    //             url: '/servers/'+id+'/favorite',
-    //             type: 'PUT',
-    //             headers: {
-    //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    //             },
-    //             success: function(status) {
-    //                 if(status == 1) {
-    //                     $(favorite).html('<svg class="bi heart" data-id='+id+' width="32" height="32" fill="currentColor"> <use xlink:href="bootstrap-icons.svg#heart-fill"/> </svg>');
-    //                 } else {
-    //                     $(favorite).html('<svg class="bi heart" data-id='+id+' width="32" height="32" fill="currentColor"> <use xlink:href="bootstrap-icons.svg#heart"/> </svg>');
-    //                 }
-    //             },
-    //             error: function() {
-    //             }
-    //         });
-    //     });
+                    $('.info').append(string);
+                });
 
-    //     $(document).on('click', '.delete',function() {
-    //         let id = $(this).attr('data-id');
-    //         $.ajax({
-    //             url: '/servers/'+id+'/destroy',
-    //             type: 'DELETE',
-    //             headers: {
-    //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    //             },
-    //             success: function() {
-    //                show();
-    //             },
-    //             error: function() {
-    //             }
-    //         });
-    //     });
-    // });
+                let pagination = Math.ceil(result.count / limit);
+                if(pagination > 1) {
+                    for(let i = 1;i <= pagination; i++) {
+                        let currentPage = offset / limit;
+                        if((i - parseInt(1)) == currentPage ) {
+                            $('.pagination').append('<li class="page-item active"><a class="page-link" href="#" value='+i+'>'+i+'</a></li>')
+                        } else {
+                            $('.pagination').append('<li class="page-item"><a class="page-link" href="#" value='+i+'>'+i+'</a></li>')
+                        }
+                    }
+                    $('.paginationNav').show();
+                    
+                    $('.page-link').click(function() {
+                        let num = $(this).attr('value');
+                        let newOffset = (num * limit) - limit;
+                        show(limit, newOffset);
+                    });
+                }
+
+                $('tr[data-href]').on("click", function() {
+                    document.location = '/'+$(this).data('href');
+                });
+
+            },
+            error: function() {
+
+            }
+        });
+    }
+    $(document).ready(function() {
+        show();
+    });
+
+    function timeConverter(timestamp){
+        var date = new Date(timestamp * 1000);
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        minutes = minutes < 10 ? '0'+minutes : minutes;
+
+        var formattedTime = day + '-' + month + '-' + year + ' ' + hours + ':' + minutes;
+
+        return formattedTime;
+    }
+
+    function convertDateToUnix(date) {
+        let unixTime = new Date(date).getTime() / 1000
+        return unixTime
+    }
 </script>
 @endsection

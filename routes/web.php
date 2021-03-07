@@ -77,8 +77,10 @@ Route::PUT('/settings/password',  [SettingsController::class, 'changePassword'])
 //SERVER INFORMATION
 
 Route::get('/servers/{id}/info',  [ServerInfoController::class, 'showInfo']);
-
 Route::get('/servers/{id}/full-information',  [ServerInfoController::class, 'index']);
+Route::get('/servers/{id}/full-information/{idInfo}',  [ServerInfoController::class, 'show']);
+
+Route::get('/ajax/servers/{id}/full-information',  [ServerInfoController::class, 'information']);
 
 
 

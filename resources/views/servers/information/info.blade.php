@@ -25,34 +25,38 @@
                         <h3>Последняя информация</h3>
                         <div class="row">
                             <div class="col-12 col-sm-6">
-                                <p>Последнее обновление: 02.03.2021 17:46</p>
+                                <p>Последнее обновление: {{ gmdate("d-m-Y H:i", $lastInfo['0']->time) }}</p>
                             </div>
                             <div class="col-12 col-sm-6">
-                                <p>Статус: работает</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12 col-sm-6">
-                                <p>Температура процессора: 80</p>
-                            </div>
-                            <div class="col-12 col-sm-6">
-                               <p>Загруженность процессора: 42%</p>
+                                @if ($lastInfo['0']->enabled == 1)
+                                    <p>Статус: работает</p>
+                                @else
+                                    <p>Статус: выключен</p>
+                                @endif
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12 col-sm-6">
-                                <p>Скорость кулера: 1800 о/с</p>
+                                <p>Температура процессора: {{ $lastInfo['0']->temp_proces }} °C</p>
                             </div>
                             <div class="col-12 col-sm-6">
-                                <p>Свободное ОЗУ: 28396/480540</p>
+                               <p>Загруженность процессора: {{ $lastInfo['0']->load_proces }} %</p>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12 col-sm-6">
-                                <p>Свободное место на жестком диске: 1.7G/25G</p>
+                                <p>Скорость кулера: {{ $lastInfo['0']->speed_cooler }} о/с</p>
                             </div>
                             <div class="col-12 col-sm-6">
-                                <p>Температура жесткого диска: 65</p>
+                                <p>Свободное ОЗУ: {{ round(($lastInfo['0']->ram / 1024),2) }} МБ</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-sm-6">
+                                <p>Свободное место на жестком диске: {{ round(($lastInfo['0']->disc_mem / 1024),2) }} МБ</p>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <p>Температура жесткого диска: {{ $lastInfo['0']->temp_hard }} °C</p>
                             </div>
                         </div>
                     </div>
@@ -60,23 +64,23 @@
                         <h2>Общая информация</h2>
                         <div class="row">
                             <div class="col-12 col-sm-6">
-                                <p>Средняя температура процессора: 80</p>
+                                <p>Средняя температура процессора: {{ $average['avgTemp'] }} °C</p>
                             </div>
                             <div class="col-12 col-sm-6">
-                               <p>Средняя загруженность процессора: 42%</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12 col-sm-6">
-                                <p>Средняя скорость кулера: 1800 о/с</p>
-                            </div>
-                            <div class="col-12 col-sm-6">
-                                <p>Среднее кол-во свободного ОЗУ: 28396/480540</p>
+                               <p>Средняя загруженность процессора: {{ $average['avgLoadProc'] }} %</p>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12 col-sm-6">
-                                <p>Средняя температура жесткого диска: 65</p>
+                                <p>Средняя скорость кулера: {{ $average['avgSpeedCool'] }} о/с</p>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <p>Среднее кол-во свободного ОЗУ: {{ $average['avgRam'] }} МБ</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-sm-6">
+                                <p>Средняя температура жесткого диска: {{ $average['avgTempHDD'] }} °C</p>
                             </div>
                         </div>
                     </div>
@@ -84,17 +88,17 @@
                         <h2>Критическая нагрузка</h2>
                         <div class="row">
                             <div class="col-12 col-sm-6">
-                                <p>Температура процессора: 85°C</p>
-                                <p>01.01.2021 15:45</p>
+                                <p>Температура процессора: {{ $critical['critTempProc']['0']->temp_proces }} °C</p>
+                                <p>{{ gmdate("d-m-Y H:i",$critical['critTempProc']['0']->time) }}</p>
                             </div>
                             <div class="col-12 col-sm-6">
-                               <p>Температура жесткого диска: 90°C </p>
-                               <p>01.01.2021 17:54</p>
+                               <p>Температура жесткого диска: {{ $critical['critTempHDD']['0']->temp_hard }} °C </p>
+                               <p>{{ gmdate("d-m-Y H:i",$critical['critTempHDD']['0']->time) }}</p>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12 col-sm-6">
-                                <p>Последнее выключение 01.01.2021 15:51</p>
+                                <p>Последнее выключение {{ gmdate("d-m-Y H:i",$critical['lastDisable']['0']->time) }}</p>
                             </div>
                         </div>
                     </div>

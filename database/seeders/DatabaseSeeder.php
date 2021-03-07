@@ -54,6 +54,22 @@ class DatabaseSeeder extends Seeder
             ],
         ]);
 
+        DB::table('telegram')->insert([
+            [
+                'name' => 'ServerMonitoring1',
+                'chat' => '460351038',
+                'token' => '1688958591:AAGYM-1-9oxeoSxaNMoEOytjss5KW-tie_s',
+                'owner' => '2'
+            ],
+            [
+                'name' => 'ServerMonitoring2',
+                'chat' => '460351038',
+                'token' => '1623729215:AAG7pNfKd7VU-KRlKCy8ArE0ybBN1Uk02kQ',
+                'owner' => '3'
+            ],
+
+        ]);
+
 
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Telegram;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -33,6 +34,13 @@ class TelegramController extends Controller
             'owner' => ['required', 'integer'],
         ]);
         if(!$user->isAdmin()) $data['owner'] = Auth()->id();
+
+        try {
+            $sendToTelegram = fopen("https://api.telegram.org/bot".$data['token']."/sendMessage?chat_id=".$data['chat']."&text=Проверка бота", "r");
+        } catch(Exception $e) {
+            return back()->with('status','Введите корректные данные');
+        }
+
         Telegram::create($data);
 
         return redirect('/telegram');
@@ -85,6 +93,12 @@ class TelegramController extends Controller
             'token' => ['required', 'string', 'max:255'],
             'owner' => ['required', 'integer'],
         ]);
+
+        try {
+            $sendToTelegram = fopen("https://api.telegram.org/bot".$data['token']."/sendMessage?chat_id=".$data['chat']."&text=Проверка бота", "r");
+        } catch(Exception $e) {
+            return back()->with('status','Введите корректные данные');
+        }
 
         if(!$user->isAdmin()) $data['owner'] = Auth()->id();
         Telegram::where('id',$id)->update($data);
