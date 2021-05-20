@@ -63,7 +63,7 @@
                             @enderror
                           </div>
                         </div>
-                        @if (Auth::user()->isAdmin())
+                        {{-- @if (Auth::user()->isAdmin())
                           <div class="row mb-3">
                             <label for="inputOwner" class="col-sm-2 col-form-label">Владелец</label>
                             <div class="col-sm-6">
@@ -80,9 +80,9 @@
                                 @enderror
                               </div>
                           </div>
-                        @else
-                            <input type="hidden" name="owner" value="{{ $owner }}">
-                        @endif
+                        @else --}}
+                        <input type="hidden" name="owner" value="{{ $owner }}">
+                        {{-- @endif --}}
                         
                         <div class="row mb-3">
                             <label class="form-check-label col-sm-2" for="enabled">

@@ -21,7 +21,10 @@ class CreateServersTable extends Migration
             $table->integer('https_port');
             $table->boolean('enabled')->default(0);
             $table->boolean('favorite')->default(0);
-            $table->foreignId('owner')->constrained('users');
+            $table->foreignId('owner')
+                ->constrained('users')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
             $table->timestamps();
         });
     }

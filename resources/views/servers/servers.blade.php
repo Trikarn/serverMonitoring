@@ -27,8 +27,9 @@
                     @if (Auth::user()->type == 'admin')
                         <select onchange="show()" style="margin-left: 20px" name="users" class="form-select" name="status" aria-label="Default select example">
                             <option value="" checked>Пользователи</option>
-                            <option value="2">tst1</option>
-                            <option value="3">tattawtat2</option>
+                            @foreach ($allUsers as $allUser)
+                                <option value="{{ $allUser->id }}">{{ $allUser->username }}</option> 
+                            @endforeach
                         </select>
                     @endif
                     </div>
@@ -86,11 +87,13 @@
                         string += '<td><input style="margin-left: 20px" class="form-check-input" type="checkbox" onclick="return false;"></td>';
                     }
                     string += '<td><a href="/servers/'+element.id+'/info" class="btn btn-primary btn-sm">Информация</a></td> <td> <a href="/servers/'+element.id+'/edit" class="button-manage" role="button"> <svg class="bi" width="32" height="32" fill="currentColor"> <use xlink:href="bootstrap-icons.svg#gear-fill"/> </svg></a> </td>';
-                    if(element.favorite == 1) {
-                        string += '<td> <a class="button-manage" id="favorite" role="button" data-favorite='+element.id+'> <svg class="bi heart" data-id='+element.id+' width="32" height="32" fill="currentColor"> <use xlink:href="bootstrap-icons.svg#heart-fill"/> </svg> </a></td>';
-                    } else {
-                        string += '<td> <a class="button-manage" id="favorite" role="button" data-favorite='+element.id+'> <svg class="bi heart" data-id='+element.id+' width="32" height="32" fill="currentColor"> <use xlink:href="bootstrap-icons.svg#heart"/> </svg> </a></td>';
-                    }
+                    @if (Auth::user()->type != 'admin')
+                        if(element.favorite == 1) {
+                            string += '<td> <a class="button-manage" id="favorite" role="button" data-favorite='+element.id+'> <svg class="bi heart" data-id='+element.id+' width="32" height="32" fill="currentColor"> <use xlink:href="bootstrap-icons.svg#heart-fill"/> </svg> </a></td>';
+                        } else {
+                            string += '<td> <a class="button-manage" id="favorite" role="button" data-favorite='+element.id+'> <svg class="bi heart" data-id='+element.id+' width="32" height="32" fill="currentColor"> <use xlink:href="bootstrap-icons.svg#heart"/> </svg> </a></td>';
+                        }
+                    @endif
                     string += '<td><a class="button-remove delete" role="button" data-id='+element.id+'> <svg class="bi" width="32" height="32" fill="currentColor"> <use xlink:href="bootstrap-icons.svg#trash-fill"/> </svg> </a> </td> </tr>';
 
                     $('.servers').append(string);

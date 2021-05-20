@@ -114,7 +114,7 @@ return [
     'starts_with' =>  '":attribute" must start with one of the following: :values.',
     'string' =>  '":attribute" должно быть a string.',
     'timezone' =>  '":attribute" должно быть a valid zone.',
-    'unique' =>  '":attribute" has already been taken.',
+    'unique' =>  '":attribute" уже занят другим пользователем.',
     'uploaded' =>  '":attribute" failed to upload.',
     'url' =>  '":attribute" format is invalid.',
     'uuid' =>  '":attribute" должно быть a valid UUID.',

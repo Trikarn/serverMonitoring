@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
@@ -60,6 +61,14 @@ class User extends Authenticatable
         
         if(count($isAdmin) == 1) return true;
         return false;
+    }
+
+    public function users()
+    {
+        $users = DB::table('users')->where('type', 'partner')
+            ->get();
+
+        return $users;
     }
 
 }

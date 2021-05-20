@@ -18,7 +18,10 @@ class CreateTelegramTable extends Migration
             $table->string('name');
             $table->integer('chat');
             $table->string('token');
-            $table->foreignId('owner')->constrained('users');
+            $table->foreignId('owner')
+                ->constrained('users')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
             $table->timestamps();
         });
     }

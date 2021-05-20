@@ -98,9 +98,13 @@ class ServerInfo extends Model
             $info = $info->orderBy($data['sort'], 'asc');
         }
 
-        return $info
+
+        $info = $info
             ->limit(1)
             ->get();
+
+        if(count($info) == 1) return $info[0];
+        return [];
     }
 
     public function add($data)

@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->command('inspire')->hourly();
         
         $schedule->call(function () {
             $server = new Server();
@@ -41,9 +41,9 @@ class Kernel extends ConsoleKernel
                 $tempProc = rand(30,100);
                 $loadProc = rand(20,100);
                 $tempHard = rand(50, 100);
-                $discMem = rand(307200, 1048576);
-                $ram = rand(307200, 1048576);
-                $speedCool = rand(1200,2000);
+                $discMem = rand(307200, 3145728);
+                $ram = rand(307200, 3145728);
+                $speedCool = rand(500,3500);
                 $enabledRand = rand(0,100);
                 if ($enabledRand >= 10) {
                     $enabled = true;
@@ -63,12 +63,15 @@ class Kernel extends ConsoleKernel
                     'speed_cooler' => $speedCool
                 ]);
 
-                $critTempProc = 90;
+                $critTempProc = 85;
                 $critTempHDD = 85;
                 $critLoadProc = 95;
-                $critRam = 102400;
+                $critRam = 500;
+                $critHDD = 1024;
+                $critFanSpeed = 2000;
                 
-                $ram = round($ram*1024,2); 
+                $ram = round($ram / 1024,2); 
+                $discMem = round($discMem / 1024,2); 
 
                 if($enabled != 1) $message = "Сервер $serverOne->name выключен!"."\n";
 
@@ -81,6 +84,8 @@ class Kernel extends ConsoleKernel
                 if($tempHard >= $critTempHDD) $message .= "Критическая температура HDD: $tempHard °C"."\n";
                 if($loadProc >= $critLoadProc) $message .= "Критическая нагрузка процессора: $loadProc %"."\n";
                 if($ram <= $critRam) $message .= "Нехватка ОЗУ. Свободное ОЗУ: $ram МБ"."\n";
+                if($discMem <= $critHDD) $message .= "Нехватка места на жесткого диске. Свободное место: $discMem МБ"."\n";
+                if($speedCool <= $critFanSpeed) $message .= "Высокая скорость вращения кулера. Скоростьь вращения: $critFanSpeed RPM"."\n";
 
                 if($message == $messageCheckSend) continue; 
 
@@ -94,7 +99,7 @@ class Kernel extends ConsoleKernel
                     $sendToTelegram = fopen("https://api.telegram.org/bot".$botData->token."/sendMessage?chat_id=".$botData->chat."&text=$message", "r");
                 }
             }
-        })->everyFiveMinutes();
+        })->everyTenMinutes();
     }
 
     /**

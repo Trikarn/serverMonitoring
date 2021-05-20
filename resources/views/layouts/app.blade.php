@@ -10,14 +10,24 @@
     <title>Мониторинг серверов</title>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="{{ asset('js/app.js') }}" ></script>
     <script src="{{asset('js/jquery-3.5.1.min.js')}}"></script>
     <script src="{{asset('js/bootstrap.bundle.js')}}"></script>
+    <script src="{{asset('js/chartjs-plugin-annotation.min.js')}}"></script>
+    {{-- <script src="{{asset('js/chart.js')}}"></script> --}}
+    {{-- <script src="{{asset('js/chart.js')}}"></script> --}}
+    {{-- <script src="path/to/chartjs-plugin-annotation/dist/chartjs-plugin-annotation.min.js"></script> --}}
+
+
+
+    <script src="https://cdn.anychart.com/releases/8.9.0/js/anychart-base.min.js" type="text/javascript"></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+
+
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -57,6 +67,7 @@
     </style>
 </head>
 <body>
+    
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
@@ -75,15 +86,19 @@
                                 <li class="nav-item">
                                     <a href="/servers" class="nav-link @if(Request::is('servers*')) active @endif">Мои сервера</a>
                                 </li>
+                                @if (Auth::user()->type != 'admin')
                                 <li class="nav-item">
                                     <a href="/favorite" class="nav-link @if(Request::is('favorite*')) active @endif">Избранное</a>
                                 </li>
+                                @endif
                                 <li class="nav-item">
                                     <a href="/supports" class="nav-link @if(Request::is('support*')) active @endif">Поддержка</a>
                                 </li>
+                                @if (Auth::user()->type != 'admin')
                                 <li class="nav-item">
                                     <a href="/telegram" class="nav-link @if(Request::is('telegram*')) active @endif">Телеграм-каналы</a>
                                 </li>
+                                @endif
                                 <li class="nav-item">
                                     <a href="/settings" class="nav-link @if(Request::is('settings*')) active @endif">Настройки</a>
                                 </li>
