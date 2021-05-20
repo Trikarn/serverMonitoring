@@ -17,6 +17,7 @@
                             {{ session('status') }}
                         </div>
                     @endif
+                    @if(Auth::user()->type == 'admin')
                     <div class="row" style="margin: 10px 5px">
                         <select class="form-select" name="status" aria-label="Default select example">
                             <option value="" disabled selected>Выберите статус</option>
@@ -37,6 +38,7 @@
                             @endif
                         </select>
                     </div>
+                    @endif
                     <div class="group-rom"> 
                         <div class="row">
                             <div class="first-part odd col-4">
@@ -53,7 +55,7 @@
 
                     <div class="comments">
                     </div>
-
+                    @if ($status != 'closed')
                     <form action="{{ "/supports/$id" }}" method="POST">
                         {{ csrf_field() }}
                         <div class="mb-3">
@@ -62,6 +64,7 @@
                         </div>
                         <button type="submit" class="btn btn-primary">Новый комментарий</button>
                     </form>
+                    @endif
                     
 
                 </div>

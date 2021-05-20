@@ -7,9 +7,11 @@
             <div class="card">
                 <div class="card-header">
                     {{ __('Обращения') }}
+                    @if (Auth::user()->type != 'admin')
                     <button type="button" class="btn btn-primary float-right" data-bs-toggle="modal" data-bs-target="#exampleModal">
                         Добавить
                     </button>
+                    @endif
                 </div>
 
                 <div class="card-body">

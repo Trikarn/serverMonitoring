@@ -70,6 +70,53 @@ class DatabaseSeeder extends Seeder
 
         ]);
 
+        DB::table('server_info')->insert([
+            [
+                'server' => 1,
+                'enabled' => 1,
+                'time' => 1617210601,
+                'temp_proces' => 50,
+                'load_proces' => 50,
+                'temp_hard' => 40,
+                'disc_mem' => 1617210601,
+                'ram' => 801578,
+                'speed_cooler' => 1491
+            ],
+            [
+                'server' => 2,
+                'enabled' => 1,
+                'time' => 1617210601,
+                'temp_proces' => 50,
+                'load_proces' => 50,
+                'temp_hard' => 40,
+                'disc_mem' => 1617210601,
+                'ram' => 801578,
+                'speed_cooler' => 1491
+            ],
+            [
+                'server' => 1,
+                'enabled' => 1,
+                'time' => 1617210601,
+                'temp_proces' => 50,
+                'load_proces' => 50,
+                'temp_hard' => 40,
+                'disc_mem' => 1617210601,
+                'ram' => 801578,
+                'speed_cooler' => 1491
+            ],
+            [
+                'server' => 2,
+                'enabled' => 1,
+                'time' => 1617210601,
+                'temp_proces' => 50,
+                'load_proces' => 50,
+                'temp_hard' => 40,
+                'disc_mem' => 1617210601,
+                'ram' => 801578,
+                'speed_cooler' => 1491
+            ],
+        ]);
+
 
     }
 }

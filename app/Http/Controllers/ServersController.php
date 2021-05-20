@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Server;
+use App\Models\ServerInfo;
 use App\Models\User;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Contracts\Validation\Validator as ValidationValidator;
@@ -20,7 +21,13 @@ class ServersController extends Controller
 
     public function index(Request $request)
     {
-        return view('servers.servers');
+        $user = new User();
+        $data = [];
+        if(Auth::user()->type == 'admin') {
+            $allUsers = $user->users();
+            $data['allUsers'] = $allUsers;
+        }
+        return view('servers.servers',$data);
     }
 
     public function create()
@@ -30,6 +37,8 @@ class ServersController extends Controller
 
     public function store(Request $request, User $user)
     {
+        $serverInfo = new ServerInfo();
+
         $data = request()->validate([
             'name' => ['required', 'string', 'max:255'],
             'host' => ['required', 'string', 'max:255'],
@@ -40,7 +49,19 @@ class ServersController extends Controller
         ]);
 
         if(!$user->isAdmin()) $data['owner'] = Auth()->id();
-        Server::create($data);
+        $serverNew = Server::create($data);
+
+        $newInfo = $serverInfo->add([
+            'server' => $serverNew->id,
+            'enabled' => 1,
+            'time' => time(),
+            'temp_proces' => 0,
+            'load_proces' => 0,
+            'temp_hard' => 0,
+            'disc_mem' => 0,
+            'ram' => 0,
+            'speed_cooler' => 0
+        ]);
 
         return redirect('/servers');
     }

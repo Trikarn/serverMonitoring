@@ -15,7 +15,10 @@ class CreateServerInfoTable extends Migration
     {
         Schema::create('server_info', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('server')->constrained('servers');
+            $table->foreignId('server')
+                ->constrained('servers')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');;
             $table->boolean('enabled');
             $table->integer('time');
             $table->integer('temp_proces');

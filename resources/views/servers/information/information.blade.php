@@ -15,26 +15,33 @@
                             {{ session('status') }}
                         </div>
                     @endif
-                    <div class="row" style="margin: 10px 5px">
-                        <select onchange="show()" class="form-select" name="status" aria-label="Default select example">
-                            <option value="" checked>Статус</option>
-                            <option value="1">Включен</option>
-                            <option value="0">Выключен</option>
-                        </select>
-                        <select style="margin-left: 10px" onchange="show()" class="form-select" name="order" aria-label="Default select example">
-                            <option value="" checked>Сортировка</option>
-                            <option value="temp_proces">Температура процессора</option>
-                            <option value="load_proces">Нагрузка процессора</option>
-                            <option value="temp_hard">Температура жесткого диска</option>
-                            <option value="disc_mem">Место на HDD</option>
-                            <option value="ram">RAM</option>
-                            <option value="speed_cooler">Скорость кулера</option>
-                            <option value="time">Время</option>
-                        </select>
-
-                        <div class="date" style="margin-left: 30px; padding-left: 10px;">
+                    <div class="row" style="margin-bottom: 20px;">
+                        <div class="col-12 col-sm-3">
+                            <select onchange="show()" class="form-select" name="status" aria-label="Default select example">
+                                <option value="" checked>Статус</option>
+                                <option value="1">Включен</option>
+                                <option value="0">Выключен</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-sm-3">
+                            <select onchange="show()" class="form-select" name="order" aria-label="Default select example">
+                                <option value="" checked>Сортировка</option>
+                                <option value="temp_proces">Температура процессора</option>
+                                <option value="load_proces">Нагрузка процессора</option>
+                                <option value="temp_hard">Температура жесткого диска</option>
+                                <option value="disc_mem">Место на HDD</option>
+                                <option value="ram">RAM</option>
+                                <option value="speed_cooler">Скорость кулера</option>
+                                <option value="time">Время</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-sm-3">
                             <label for="dateFrom">От</label>
                             <input onchange="show()" type="datetime-local" name="dateFrom" id="dateFrom">
+                        </div>
+                        <div class="col-12 col-sm-3">
                             <label for="dateTo">До</label>
                             <input onchange="show()" type="datetime-local" name="dateTo" id="dateTo">
                         </div>

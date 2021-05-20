@@ -26,7 +26,7 @@ class ServerInfoController extends Controller
         return view('servers.information.information', $data);
     }
 
-    public function show($idInfo, Request $request)
+    public function show($id,$idInfo, Request $request)
     {
         $user = new User();
         $serverInfo = new ServerInfo();
@@ -40,7 +40,9 @@ class ServerInfoController extends Controller
             'infoId' => $idInfo
         ]);
 
-        $information = (array) $information[0];
+        $information = (array) $information;
+
+        // print_r($idInfo);
 
         return view('servers.information.show', $information);
     }
@@ -63,28 +65,27 @@ class ServerInfoController extends Controller
 
         $information = $serverInfo->information([
             'serverId' => $id,
+            'dateFrom' => time() - 10800, // 10800 - seconds in 3 hours,
+            'dateTo' => time()
         ]);
 
-        $avgTemp = 0;
-        $avgSpeedCool = 0;
-        $avgLoadProc = 0;
-        $avgRam = 0;
-        $avgTempHDD = 0;
+        $fullTempProc = [];
+        $fullTempHDD = [];
+        $fullLoadProc = [];
+        $fullFanSpeed = [];
+        $fullRam = [];
+        $fullHDD = [];
+        $fullTime = [];
 
         foreach($information as $oneInfo) {
-            $avgTemp += $oneInfo->temp_proces;
-            $avgSpeedCool += $oneInfo->speed_cooler;
-            $avgLoadProc += $oneInfo->load_proces;
-            $avgRam += $oneInfo->ram;
-            $avgTempHDD += $oneInfo->temp_hard;
+            array_unshift($fullTempProc,$oneInfo->temp_proces);
+            array_unshift($fullTempHDD,$oneInfo->temp_hard);
+            array_unshift($fullLoadProc,$oneInfo->load_proces);
+            array_unshift($fullFanSpeed,$oneInfo->speed_cooler);
+            array_unshift($fullRam,round(($oneInfo->ram / 1024),2));
+            array_unshift($fullHDD,round(($oneInfo->disc_mem / 1024),2));
+            array_unshift($fullTime,gmdate("H:i",$oneInfo->time));
         }
-
-        $count = count($information);
-        $avgTemp = round($avgTemp / $count);
-        $avgSpeedCool = round($avgSpeedCool / $count);
-        $avgLoadProc = round($avgLoadProc / $count);
-        $avgRam = round($avgRam / $count /1024, 2);
-        $avgTempHDD = round($avgTempHDD / $count);
 
         $critTempProc = $serverInfo->get([
             'serverId' => $id,
@@ -106,12 +107,14 @@ class ServerInfoController extends Controller
         $data = [
             'serverId' => $id,
             'lastInfo' => $lastInfo,
-            'average' => [
-                'avgTemp' => $avgTemp,
-                'avgSpeedCool' => $avgSpeedCool,
-                'avgLoadProc' => $avgLoadProc,
-                'avgRam' => $avgRam,
-                'avgTempHDD' => $avgTempHDD,
+            'full' => [
+                'fullTime' => json_encode($fullTime,  JSON_HEX_QUOT   | JSON_HEX_APOS),
+                'fullTempProc' => json_encode($fullTempProc),
+                'fullTempHDD' => json_encode($fullTempHDD),
+                'fullLoadProc' => json_encode($fullLoadProc),
+                'fullFanSpeed' => json_encode($fullFanSpeed),
+                'fullRam' => json_encode($fullRam),
+                'fullHDD' => json_encode($fullHDD),
             ],
             'critical' => [
                 'critTempProc' => $critTempProc,
@@ -120,7 +123,8 @@ class ServerInfoController extends Controller
             ]
         ];
 
-        // print_r($data);
+        // print_r($data['full']['fullTime']);
+        // print_r($information);
         return view('servers.information.info',$data);
     }
 
